@@ -10,12 +10,13 @@ public class CommandLineInterface {
                 .build();
     }
     public static void start(String[] args) throws IOException {
-        setup();
 
         if (args.length == 0) {
             cmdHelp();
             return;
         }
+
+        setup();
 
         for (int i = 0; i < args.length; i++) {
             String argAtual = args[i];
@@ -50,7 +51,11 @@ public class CommandLineInterface {
                             listarPaths(isVerbose);
                         } else listarPaths(false);
                     }
-                    case CHECK, UPLOAD, DOWNLOAD, HELP -> System.out.println("Executando comando simples: " + comando);
+                    case CHECK, UPLOAD, DOWNLOAD, HELP -> {
+                        for (String path : file.listPaths()) {
+                            GitService.status(path);
+                        }
+                    } //System.out.println("Executando comando simples: " + comando);
 
                 }
             } else {
