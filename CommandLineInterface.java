@@ -3,11 +3,13 @@ import java.util.List;
 
 public class CommandLineInterface {
     private static GitRepositoriesFile file;
+    private static GitService gitService;
 
     private static void setup() throws IOException {
         file = GitRepositoriesFile.builder()
                 .path("/home/jp/.git_repos.txt")
                 .build();
+        gitService = new GitService(new GitExecutor());
     }
     public static void start(String[] args) throws IOException {
 
@@ -53,7 +55,7 @@ public class CommandLineInterface {
                     }
                     case CHECK, UPLOAD, DOWNLOAD, HELP -> {
                         for (String path : file.listPaths()) {
-                            GitService.status(path);
+                            gitService.status(path);
                         }
                     } //System.out.println("Executando comando simples: " + comando);
 

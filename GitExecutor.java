@@ -2,6 +2,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -33,52 +34,63 @@ public class GitExecutor {
 //
 //    }
 
-    public static void cmdFetch(String path) {
-        List<String> comando = GitCommands.fetch(path);
+    public GitResult execute(List<String> command) throws IOException, InterruptedException{
+        ProcessBuilder pb = new ProcessBuilder(command);
+        Process process = pb.start();
 
-        ProcessBuilder pb = new ProcessBuilder(comando);
-        pb.redirectOutput(ProcessBuilder.Redirect.DISCARD);
-        pb.redirectError(ProcessBuilder.Redirect.DISCARD);
+        String output = new String(process.getInputStream().readAllBytes(), StandardCharsets.UTF_8);
+        int exitCode = process.waitFor();
 
-        try {
-            System.out.println("Iniciando processo...");
-            Process p = pb.start();
-
-            p.waitFor();
-            System.out.println("Processo finalizado");
-
-        } catch (IOException | InterruptedException ex) {
-            ex.printStackTrace();
-        }
+        return new GitResult(exitCode,output);
     }
 
-    public static List<String> cmdStatus(String path) {
-        List<String> comando = GitCommands.status(path);
-        List<String> response = new ArrayList<>();
-
-        ProcessBuilder pb = new ProcessBuilder(comando);
-        pb.redirectErrorStream(true);
-
-        try {
-            System.out.println("Iniciando processo...");
-
-            Process p = pb.start();
-
-            try (BufferedReader br = new BufferedReader(new InputStreamReader(p.getInputStream()))) {
-                String linha;
-                while ((linha = br.readLine()) != null) {
-                    response.add(linha);
-                }
-            }
-
-            p.waitFor();
-            System.out.println("Processo finalizado");
-
-        } catch (IOException | InterruptedException ex ) {
-            ex.printStackTrace();
-        }
-        return response;
-    }
+//    public static void cmdFetch(String path) {
+//        List<String> comando = GitCommands.fetch(path);
+//
+//        ProcessBuilder pb = new ProcessBuilder(comando);
+//        pb.redirectOutput(ProcessBuilder.Redirect.DISCARD);
+//        pb.redirectError(ProcessBuilder.Redirect.DISCARD);
+//
+//        try {
+//            System.out.println("Iniciando processo...");
+//            Process p = pb.start();
+//
+//            p.waitFor();
+//            System.out.println("Processo finalizado");
+//
+//        } catch (IOException | InterruptedException ex) {
+//            ex.printStackTrace();
+//        }
+//    }
+//
+//    public static List<String> cmdStatus(String path) {
+//        List<String> comando = GitCommands.status(path);
+//        List<String> response = new ArrayList<>();
+//
+//        ProcessBuilder pb = new ProcessBuilder(comando);
+//        pb.redirectErrorStream(true);
+//
+//        try {
+//            System.out.print("Iniciando processo com os comandos: ");
+//            comando.forEach(c -> System.out.print(c + " "));
+//
+//            Process p = pb.start();
+//
+//            try (BufferedReader br = new BufferedReader(new InputStreamReader(p.getInputStream()))) {
+//                String linha;
+//                while ((linha = br.readLine()) != null) {
+//                    response.add(linha);
+//                }
+//            }
+//
+//            p.waitFor();
+//            System.out.println("\nProcesso finalizado");
+//
+//        } catch (IOException | InterruptedException ex ) {
+//            ex.printStackTrace();
+//        }
+//        return response;
+//    }
 
 
 }

@@ -1,14 +1,35 @@
+import java.io.IOException;
 import java.util.List;
 
 public class GitService {
 
-    public static void fetch(String path) {
-        GitExecutor.cmdFetch(path);
+    private final GitExecutor gitExecutor;
+    public GitService(GitExecutor gitExecutor) {
+        this.gitExecutor = gitExecutor;
     }
 
-    public static void status(String path) {
-        List<String> response = GitExecutor.cmdStatus("/home/jp/Área de trabalho/Códigos/Java/sync-repo");
+    public void status(String path) {
+        List<String> command = GitCommands.status(path);
 
-        response.forEach(System.out::println);
+        try {
+            var res = gitExecutor.execute(command);
+            System.out.printf(
+                    """
+                    Processo finalizado com exit code: %s
+                    Output:
+                    %s
+                    """,
+                    res.exitCode(),
+                    res.output()
+            );
+        } catch (IOException ioex) {
+            System.err.println("Erro ao tentar iniciar o processo do GIT: " + ioex.getMessage());
+        } catch (InterruptedException iex) {
+            System.err.println("Processo do GIT parado de forma abrupta: "  + iex.getMessage());
+        }
     }
+
+
+
+
 }
