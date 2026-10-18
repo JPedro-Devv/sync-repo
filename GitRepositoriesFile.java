@@ -78,8 +78,8 @@ public class GitRepositoriesFile {
         private File file;
         private List<String> linhasArquivo;
 
-        public Builder path(String path) {
-            this.path = Paths.get(path);
+        public Builder path(Path path) {
+            this.path = path;
             return this;
         }
 
@@ -91,7 +91,7 @@ public class GitRepositoriesFile {
 
             if (!file.exists()) {
                 try {
-                    Files.createFile(file.toPath());
+                    Files.createFile(this.path);
                 } catch (IOException ex) {
                     throw new IOException(format("O arquivo %s não foi encontrado e ocorreu um erro ao tentar cria-lo, erro: %s",
                             this.path,
