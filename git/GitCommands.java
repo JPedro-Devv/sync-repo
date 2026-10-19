@@ -1,3 +1,5 @@
+package git;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,6 +17,7 @@ public  class GitCommands {
         List<String> fetch = new ArrayList<>(initialCommand(path));
 
         fetch.add("fetch");
+        fetch.add("--quiet");
 
         return fetch;
     }
@@ -34,6 +37,7 @@ public  class GitCommands {
         push.add("push");
         push.add("origin");
         push.add("main");
+        push.add("--quiet");
 
         return push;
     }
@@ -44,6 +48,7 @@ public  class GitCommands {
         pull.add("pull");
         pull.add("origin");
         pull.add("main");
+        pull.add("--quiet");
 
         return pull;
     }
@@ -54,7 +59,7 @@ public  class GitCommands {
         revList.add("rev-list");
         revList.add("--left-right");
         revList.add("--count");
-        revList.add("HEAD..main");
+        revList.add("HEAD...origin/main");
 
         return revList;
     }

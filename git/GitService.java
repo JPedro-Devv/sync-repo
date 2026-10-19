@@ -1,3 +1,5 @@
+package git;
+
 import java.io.IOException;
 import java.util.List;
 
@@ -8,7 +10,7 @@ public class GitService {
         this.gitExecutor = gitExecutor;
     }
 
-    public void status(String path) {
+    public void status(String path) throws IOException, InterruptedException {
         List<String> command = GitCommands.status(path);
 
         try {
@@ -23,9 +25,9 @@ public class GitService {
                     res.output()
             );
         } catch (IOException ioex) {
-            System.err.println("Erro ao tentar iniciar o processo do GIT: " + ioex.getMessage());
+            throw new IOException("Erro ao tentar iniciar o processo do GIT: " + ioex);
         } catch (InterruptedException iex) {
-            System.err.println("Processo do GIT parado de forma abrupta: "  + iex.getMessage());
+            throw new InterruptedException("Processo do GIT parado de forma abrupta: "  + iex);
         }
     }
 

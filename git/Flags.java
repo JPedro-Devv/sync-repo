@@ -1,4 +1,9 @@
-public enum SubComandos {
+package git;
+
+import java.util.Arrays;
+import java.util.Optional;
+
+public enum Flags {
     CHECK("-c", "--check"),
     UPLOAD("-u", "--upload"),
     DOWNLOAD("-d", "--download"),
@@ -19,20 +24,17 @@ public enum SubComandos {
         return flagLonga;
     }
 
-    SubComandos(String flagCurta, String flagLonga) {
+    Flags(String flagCurta, String flagLonga) {
         this.flagCurta = flagCurta;
         this.flagLonga = flagLonga;
     }
 
-    public static SubComandos fromString(String arg) {
-        if (arg == null) return null;
+    public static Optional<Flags> fromString(String arg) {
+        if (arg == null || arg.isBlank()) return Optional.empty();
 
-        for (SubComandos c : values()) {
-            if (c.flagCurta.equalsIgnoreCase(arg) || c.flagLonga.equalsIgnoreCase(arg)) {
-                return c;
-            }
-        }
-        return  null;
+        return Arrays.stream(values())
+                .filter(f -> arg.equals(f.flagCurta) || arg.equals(f.flagLonga))
+                .findFirst();
     }
 
 }
